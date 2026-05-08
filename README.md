@@ -1,22 +1,24 @@
 # opendart-py
 
-**Async Python client for DART (Korea FSS) OpenAPI** — 한국 금융감독원 전자공시 비동기 클라이언트.
+**Async Python client for DART (Korea FSS) OpenAPI** — the official Korean corporate disclosure system.
 
-[![PyPI](https://img.shields.io/pypi/v/opendart.svg)](https://pypi.org/project/opendart/)
-[![Python](https://img.shields.io/pypi/pyversions/opendart.svg)](https://pypi.org/project/opendart/)
+[![PyPI](https://img.shields.io/pypi/v/opendart-py.svg)](https://pypi.org/project/opendart-py/)
+[![Python](https://img.shields.io/pypi/pyversions/opendart-py.svg)](https://pypi.org/project/opendart-py/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-DART (전자공시시스템, https://opendart.fss.or.kr) OpenAPI를 비동기로 호출하는 가벼운 Python 클라이언트입니다. KOSPI / KOSDAQ / KONEX 상장사의 공시, 재무제표, 지분공시, 주요사항보고서를 한 줄로 가져올 수 있습니다.
+A lightweight async Python client for the [DART OpenAPI](https://opendart.fss.or.kr) — **Korea's equivalent of SEC EDGAR**, run by the Financial Supervisory Service. Fetch filings, financial statements, ownership reports, and major corporate decisions for any KOSPI / KOSDAQ / KONEX listed company in one line.
 
-- **Async-first**: `httpx` + `asyncio` 기반. FastAPI / aiohttp 서버에서 그대로 사용
-- **Typed**: Pydantic v2 모델로 응답 검증
-- **No globals**: 환경변수·싱글톤 강제 없음. API key 직접 주입
-- **Zero infra**: Redis · DB 의존성 없음 (필요 시 cache backend 주입 가능)
+If you've ever used `sec-edgar-downloader` or `edgar` for US equities, this is the same idea — but for the Korean market (~2,400 listed companies, ~$2T market cap).
+
+- **Async-first** — built on `httpx` + `asyncio`. Drops into FastAPI / aiohttp servers
+- **Typed** — Pydantic v2 models for request and response validation
+- **No globals** — no env-var or singleton magic. API key is passed explicitly
+- **Zero infra** — no Redis or DB dependency. Inject your own cache backend if you need one
 
 ## Install
 
 ```bash
-pip install opendart
+pip install opendart-py
 ```
 
 ## Quickstart
@@ -40,11 +42,11 @@ async def main():
 asyncio.run(main())
 ```
 
-> DART API 키 발급: https://opendart.fss.or.kr/uss/umt/login/loginPage.do (무료, 일 20,000건)
+> Get a DART API key (free, 20,000 requests/day): https://opendart.fss.or.kr/uss/umt/login/loginPage.do
 
 ## Stock code → corp_code
 
-DART는 자체 8자리 `corp_code`를 사용합니다. KRX 종목코드(`005930`)로 변환하려면:
+DART uses its own 8-digit `corp_code` rather than the 6-digit KRX stock code. To convert:
 
 ```python
 from opendart import CorpCodeResolver
@@ -53,7 +55,7 @@ resolver = CorpCodeResolver(api_key="YOUR_DART_KEY")
 samsung = await resolver.resolve("005930")  # → "00126380"
 ```
 
-`corpCode.xml` 전체를 한 번 다운로드 후 메모리에 캐시합니다. 멀티프로세스 환경에서는 Redis 등 외부 캐시를 주입할 수 있습니다:
+The full `corpCode.xml` is downloaded once and cached in memory. For multi-process deployments you can inject any async cache backend (e.g. Redis):
 
 ```python
 import redis.asyncio as redis
@@ -64,31 +66,31 @@ resolver = CorpCodeResolver(api_key="...", cache=cache)
 
 ## Coverage
 
-| 카테고리 | DART 분류 | 메서드 |
+| Category | DART group | Methods |
 |---|---|---|
-| 공시 검색 | — | `search_disclosures`, `get_document` |
-| 기업개황 | DS001 | `get_company_overview` |
-| 정기보고서 | DS002 | `get_dividends`, `get_major_shareholders`, `get_shareholder_changes`, `get_executives`, `get_executive_compensation`, `get_top_compensation`, `get_treasury_stock`, `get_employees`, `get_minor_shareholders`, `get_audit_opinion` |
-| 재무제표 | DS003 | `get_single_account`, `get_full_statements`, `get_financial_indicators` |
-| 지분공시 | DS004 | `get_major_stock_reports`, `get_executive_stock_reports` |
-| 주요사항보고서 | DS005 | `get_cb_issuance`, `get_bw_issuance`, `get_paid_increase`, `get_free_increase`, `get_capital_reduction`, `get_merger_decision` |
-| 증권신고서 | DS006 | `get_equity_registration`, `get_debt_registration` |
+| Disclosure search | — | `search_disclosures`, `get_document` |
+| Company overview | DS001 | `get_company_overview` |
+| Periodic reports | DS002 | `get_dividends`, `get_major_shareholders`, `get_shareholder_changes`, `get_executives`, `get_executive_compensation`, `get_top_compensation`, `get_treasury_stock`, `get_employees`, `get_minor_shareholders`, `get_audit_opinion` |
+| Financial statements | DS003 | `get_single_account`, `get_full_statements`, `get_financial_indicators` |
+| Ownership reports | DS004 | `get_major_stock_reports`, `get_executive_stock_reports` |
+| Major decisions | DS005 | `get_cb_issuance`, `get_bw_issuance`, `get_paid_increase`, `get_free_increase`, `get_capital_reduction`, `get_merger_decision` |
+| Securities registration | DS006 | `get_equity_registration`, `get_debt_registration` |
 
 ## Examples
 
-### 자사주 취득 (밸류업 프로그램 추적)
+### Treasury stock (Korea Value-Up program tracking)
 
 ```python
 treasury = await dart.get_treasury_stock(
     corp_code="00126380",  # Samsung Electronics
     bsns_year="2025",
-    reprt_code="11011",  # 사업보고서
+    reprt_code="11011",  # Annual report
 )
 ```
 
-`reprt_code`: `11011` 사업보고서 / `11012` 반기 / `11013` 1분기 / `11014` 3분기.
+`reprt_code`: `11011` annual / `11012` half-year / `11013` Q1 / `11014` Q3.
 
-### 전환사채 발행 모니터링
+### Convertible bond issuance monitoring
 
 ```python
 cb = await dart.get_cb_issuance(
@@ -98,22 +100,22 @@ cb = await dart.get_cb_issuance(
 )
 ```
 
-### 재무지표
+### Financial indicators
 
 ```python
 profitability = await dart.get_financial_indicators(
     corp_code="00126380",
     bsns_year="2025",
     reprt_code="11011",
-    idx_cl_code="M210000",  # 수익성
+    idx_cl_code="M210000",  # Profitability
 )
 ```
 
-`idx_cl_code`: `M210000` 수익성 / `M220000` 안정성 / `M230000` 성장성 / `M240000` 활동성.
+`idx_cl_code`: `M210000` profitability / `M220000` stability / `M230000` growth / `M240000` activity.
 
 ## Production
 
-이 라이브러리는 [Alpha Lens](https://alphalens.io) — 한국 주식 AI 투자 분석 서비스 — 의 프로덕션 코드에서 분리되었으며, 현재 1만+ 종목 일일 공시 수집에 사용 중입니다.
+This library was extracted from the production codebase of [Alpha Lenz](https://alpha-lenz.com) — an AI-powered Korean equity research platform — and is currently used to ingest daily disclosures across 10,000+ KRX-listed tickers.
 
 ## Development
 
@@ -130,6 +132,6 @@ MIT — see [LICENSE](LICENSE).
 
 ## See also
 
-- [DART OpenAPI 공식 문서](https://opendart.fss.or.kr/guide/main.do)
-- `pykrx` — KRX 시세 데이터 (보완 관계)
-- `dart-fss` — 동기 DART 클라이언트 (선구 프로젝트)
+- [DART OpenAPI official documentation](https://opendart.fss.or.kr/guide/main.do)
+- `pykrx` — KRX market data (complementary)
+- `dart-fss` — synchronous DART client (predecessor project)

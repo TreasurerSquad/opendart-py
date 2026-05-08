@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "opendart"
+name = "opendart-py"
 version = "0.1.0"
-description = "Async Python client for DART (Korea Financial Supervisory Service) OpenAPI — 한국 전자공시 비동기 클라이언트"
+description = "Async Python client for DART — Korea's Financial Supervisory Service corporate disclosure OpenAPI (KOSPI / KOSDAQ / KONEX filings, financials, ownership)"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
@@ -14,14 +14,19 @@ keywords = [
     "dart",
     "opendart",
     "korea",
+    "korean-stocks",
     "krx",
     "kospi",
     "kosdaq",
+    "konex",
     "finance",
+    "fintech",
     "disclosure",
-    "전자공시",
-    "한국주식",
-    "금융감독원",
+    "filings",
+    "edgar-equivalent",
+    "financial-statements",
+    "equity-research",
+    "value-up",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -33,7 +38,8 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Office/Business :: Financial",
-    "Natural Language :: Korean",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Natural Language :: English",
 ]
 dependencies = [
     "httpx>=0.25",
