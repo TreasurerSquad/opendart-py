@@ -1,6 +1,12 @@
 """opendart — Async Python client for DART OpenAPI.
 
-한국 금융감독원 전자공시(DART) OpenAPI 비동기 클라이언트.
+DART (https://opendart.fss.or.kr) is Korea's equivalent of SEC EDGAR,
+operated by the Financial Supervisory Service. This client provides
+async access to filings, financial statements, and ownership reports
+for KOSPI / KOSDAQ / KONEX listed companies.
+
+Built and maintained by Alpha Lenz (https://alpha-lenz.com), an
+AI-powered Korean equity research platform.
 """
 
 from .client import DartClient

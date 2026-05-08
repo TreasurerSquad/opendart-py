@@ -5,6 +5,9 @@
 [![PyPI](https://img.shields.io/pypi/v/opendart-py.svg)](https://pypi.org/project/opendart-py/)
 [![Python](https://img.shields.io/pypi/pyversions/opendart-py.svg)](https://pypi.org/project/opendart-py/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Built by Alpha Lenz](https://img.shields.io/badge/built%20by-Alpha%20Lenz-7c3aed.svg)](https://alpha-lenz.com)
+
+> Built and maintained by [**Alpha Lenz**](https://alpha-lenz.com) — an AI-powered Korean equity research platform. This is the same DART client that powers our daily ingestion of 10,000+ KOSPI/KOSDAQ filings.
 
 A lightweight async Python client for the [DART OpenAPI](https://opendart.fss.or.kr) — **Korea's equivalent of SEC EDGAR**, run by the Financial Supervisory Service. Fetch filings, financial statements, ownership reports, and major corporate decisions for any KOSPI / KOSDAQ / KONEX listed company in one line.
 
@@ -113,9 +116,15 @@ profitability = await dart.get_financial_indicators(
 
 `idx_cl_code`: `M210000` profitability / `M220000` stability / `M230000` growth / `M240000` activity.
 
-## Production
+## About Alpha Lenz
 
-This library was extracted from the production codebase of [Alpha Lenz](https://alpha-lenz.com) — an AI-powered Korean equity research platform — and is currently used to ingest daily disclosures across 10,000+ KRX-listed tickers.
+[Alpha Lenz](https://alpha-lenz.com) is an AI-powered equity research platform for the Korean stock market (KOSPI · KOSDAQ). We use this library in production to:
+
+- ingest daily DART disclosures across 10,000+ KRX-listed tickers
+- monitor convertible bond and treasury-stock activity for our [Value-Up tracker](https://alpha-lenz.com)
+- power the [Alpha Lenz AI agent](https://alpha-lenz.com), which answers natural-language questions about Korean equities
+
+If you're building anything around Korean financial data, [check out Alpha Lenz](https://alpha-lenz.com) — and if you find a bug or want a missing endpoint added to `opendart-py`, please [open an issue](https://github.com/TreasurerSquad/opendart-py/issues). We dogfood this client every day, so PRs and issues get prompt attention.
 
 ## Development
 

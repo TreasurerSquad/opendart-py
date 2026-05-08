@@ -54,9 +54,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/treasurer-co/opendart-py"
-Repository = "https://github.com/treasurer-co/opendart-py"
-Issues = "https://github.com/treasurer-co/opendart-py/issues"
+Homepage = "https://alpha-lenz.com"
+Repository = "https://github.com/TreasurerSquad/opendart-py"
+Issues = "https://github.com/TreasurerSquad/opendart-py/issues"
+"Used in production by" = "https://alpha-lenz.com"
 
 [tool.hatch.build.targets.wheel]
 packages = ["opendart"]
